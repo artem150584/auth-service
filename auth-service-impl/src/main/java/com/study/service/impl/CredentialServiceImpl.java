@@ -1,32 +1,39 @@
-package com.study.service;
+package com.study.service.impl;
 
 import com.study.dto.TokenResponse;
 import com.study.entity.Credential;
 import com.study.repository.CredentialRepository;
+import com.study.service.CredentialService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@RestController
+@Service
 @RequiredArgsConstructor
 public class CredentialServiceImpl implements CredentialService {
 
     private final CredentialRepository credentialRepository;
 
-    private static final long FIVE_MINUTES_MS = 5 * 60 * 1000;
-    private static final long TOKEN_LIFETIME_MS = 60 * 60 * 1000;
+
+    @Value("${application.token.expiry-threshold:PT5M}")
+    private Duration expiryThreshold;
+
+    @Value("${application.token.lifetime:PT1H}")
+    private Duration tokenLifeTime;
 
     @Override
     public TokenResponse getTokenBySeries(String series) {
 
-        Date now = new Date();
-        Date threshold = new Date(now.getTime() + FIVE_MINUTES_MS);
+        LocalDateTime  now = LocalDateTime.now();
+        LocalDateTime  threshold = now.plus(expiryThreshold);
 
         Credential credential = credentialRepository.findBySeries(series)
                 .map(existing -> {
-                    if (existing.getExpiredDate().before(threshold)) {
+                    if (existing.getExpiredDate().isBefore(threshold)) {
                         return updateExistingToken(existing, now);
                     }
                     return existing;
@@ -41,19 +48,20 @@ public class CredentialServiceImpl implements CredentialService {
                 .build();
     }
 
-    private Credential createNewToken(String series, Date now) {
+    private Credential createNewToken(String series, LocalDateTime now) {
         Credential newCred = Credential.builder()
                 .series(series)
                 .token(generateToken())
-                .expiredDate(new Date(now.getTime() + TOKEN_LIFETIME_MS))
+                .expiredDate(now.plus(tokenLifeTime))
                 .active(true)
+                .updatedDate(now)
                 .build();
         return credentialRepository.save(newCred);
     }
 
-    private Credential updateExistingToken(Credential credential, Date now) {
+    private Credential updateExistingToken(Credential credential, LocalDateTime now) {
         credential.setToken(generateToken());
-        credential.setExpiredDate(new Date(now.getTime() + TOKEN_LIFETIME_MS));
+        credential.setExpiredDate(now.plus(tokenLifeTime));
         credential.setUpdatedDate(now);
         return credentialRepository.save(credential);
     }

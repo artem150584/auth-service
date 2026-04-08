@@ -9,18 +9,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "credential")
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -36,12 +32,12 @@ public class Credential {
     @Column(name = "token", nullable = false, length = 32)
     private String token;
 
-    @Column(name = "expired_date")
-    private Date expiredDate;
+    @Column(name = "expired_date", nullable = false)
+    private LocalDateTime expiredDate;
 
-    @Column(name = "active")
+    @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @Column(name = "updated_date")
-    private Date updatedDate;
+    @Column(name = "updated_date", nullable = false)
+    private LocalDateTime updatedDate;
 }
