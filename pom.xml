@@ -16,6 +16,7 @@
     <modules>
         <module>auth-service-db</module>
         <module>auth-service-impl</module>
+        <module>auth-service-api</module>
     </modules>
 
     <properties>

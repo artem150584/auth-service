@@ -15,5 +15,4 @@ public class TokenResponse {
     private String series;
     private LocalDateTime expiredDate;
     private String token;
-
 }

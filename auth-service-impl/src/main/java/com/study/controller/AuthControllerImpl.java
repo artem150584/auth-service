@@ -1,6 +1,5 @@
-package com.study.controller.impl;
+package com.study.controller;
 
-import com.study.controller.AuthController;
 import com.study.service.CredentialService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
