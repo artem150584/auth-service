@@ -10,6 +10,6 @@ CREATE TABLE credential
     series       VARCHAR(16) NOT NULL UNIQUE,
     token        VARCHAR(32) NOT NULL,
     expired_date TIMESTAMP   NOT NULL,
-    active       BOOLEAN NOT NULL DEFAULT true,
-    updated_date TIMESTAMP
+    active       BOOLEAN     NOT NULL DEFAULT true,
+    updated_date TIMESTAMP   NOT NULL
 );

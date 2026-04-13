@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,22 +26,18 @@ public class Credential {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull
-    @Column(name = "series", length = 16, unique = true)
+    @Column(name = "series", nullable = false, length = 16, unique = true)
     private String series;
 
-    @NotNull
-    @Column(name = "token", length = 32)
+    @Column(name = "token", nullable = false, length = 32)
     private String token;
 
-    @NotNull
-    @Column(name = "expired_date")
+    @Column(name = "expired_date", nullable = false)
     private LocalDateTime expiredDate;
 
-    @NotNull
-    @Column(name = "active")
+    @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @Column(name = "updated_date")
+    @Column(name = "updated_date", nullable = false)
     private LocalDateTime updatedDate;
 }
