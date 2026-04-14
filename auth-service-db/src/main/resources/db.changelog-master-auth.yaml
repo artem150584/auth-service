@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: v1/initi-schema.sql
